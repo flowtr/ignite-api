@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	igniteUtil "github.com/flowtr/ignite-api/pkg/util"
@@ -51,4 +52,26 @@ func CreateVM(c *fiber.Ctx) error {
 	vm := igniteUtil.CreateVM(data)
 
 	return c.JSON(vm)
+}
+
+func DeleteVM(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	if strings.TrimSpace(id) == "" {
+		return c.Status(400).JSON(errors.New(
+			"invalid id parameter",
+		))
+	}
+
+	err := providers.Client.VMs().Delete(runtime.UID(
+		id,
+	))
+
+	if err != nil {
+		return c.Status(500).JSON(err)
+	}
+
+	return c.JSON(fiber.Map{
+		"message": fmt.Sprintf("Succesfully deleted vm %s", id),
+	})
 }

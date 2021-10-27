@@ -43,6 +43,7 @@ func CreateApp() *fiber.App {
 
 	app.Get("/vm", handler.GetVMS)
 	app.Get("/vm/{id}", handler.GetVM)
+	app.Delete("/vm/{id}", handler.DeleteVM)
 	app.Post("/vm", handler.CreateVM)
 
 	return app
